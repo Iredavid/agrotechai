@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "AgroTech AI"
+version = "1.0.0"
+id = "artifacts/agrotech-ai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24955
+
+[services.development]
+run = "pnpm --filter @workspace/agrotech-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/agrotech-ai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/agrotech-ai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24955"
+BASE_PATH = "/"
