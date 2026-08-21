@@ -1,5 +1,5 @@
 export async function getData(path: string) {
-  const response = await fetch(`http://127.0.0.1:8000/${path}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/${path}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export async function getLongLat(state: string): Promise<{
   latitude: number;
   longitude: number;
 }> {
-  const response = await fetch("http://127.0.0.1:8000/geocode", {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/geocode`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

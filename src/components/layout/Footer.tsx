@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, IconButton, useTheme } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { Twitter, LinkedIn, GitHub, Instagram } from '@mui/icons-material';
+import  Twitter from '@mui/icons-material/Twitter';
+import  LinkedIn from '@mui/icons-material/LinkedIn';
+import  GitHub from '@mui/icons-material/GitHub';
+import  Instagram from '@mui/icons-material/Instagram';
 
 const Footer: React.FC = () => {
   const theme = useTheme();

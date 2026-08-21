@@ -1,6 +1,11 @@
 import React from 'react';
 import { Box, IconButton, InputBase, Avatar, Badge, useTheme } from '@mui/material';
-import { Menu as MenuIcon, Search as SearchIcon, Notifications as NotificationsIcon, DarkMode, LightMode } from '@mui/icons-material';
+import  Menu  from '@mui/icons-material/Menu';
+import  Search  from '@mui/icons-material/Search';
+import  Notifications  from '@mui/icons-material/Notifications';
+import  DarkMode  from '@mui/icons-material/DarkMode';
+import  LightMode  from '@mui/icons-material/LightMode';
+
 import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from '../../context/AuthContext';
 
@@ -37,7 +42,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerToggle, toggleTheme, mode }
           onClick={handleDrawerToggle}
           sx={{ mr: 2, display: { md: 'none' } }}
         >
-          <MenuIcon />
+          <Menu />
         </IconButton>
 
         <Box
@@ -51,7 +56,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerToggle, toggleTheme, mode }
             width: 300,
           }}
         >
-          <SearchIcon sx={{ color: 'text.secondary', mr: 1, fontSize: 20 }} />
+          <Search sx={{ color: 'text.secondary', mr: 1, fontSize: 20 }} />
           <InputBase
             placeholder="Search farm records, tasks..."
             sx={{ flex: 1, fontSize: '0.9rem' }}
@@ -66,7 +71,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerToggle, toggleTheme, mode }
         
         <IconButton component={RouterLink} to={"/notifications"}>
           <Badge badgeContent={3} color="error">
-            <NotificationsIcon sx={{ color: 'text.secondary' }} />
+            <Notifications sx={{ color: 'text.secondary' }} />
           </Badge>
         </IconButton>
         

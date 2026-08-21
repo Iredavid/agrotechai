@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Box,
   Drawer,
   List,
   ListItem,
@@ -10,23 +9,21 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import Box from "@mui/material/Box";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import {
-  Dashboard,
-  // Sprout, // Requires lucide-react or similar, we use MUI icons
-  CloudQueue,
-  BugReport,
-  WaterDrop,
-  TrendingUp,
-  EventNote,
-  Storefront,
-  Description,
-  Notifications,
-  SmartToy,
-  Person,
-  Settings,
-  Grass,
-} from "@mui/icons-material";
+import Dashboard from "@mui/icons-material/Dashboard";
+import CloudQueue from "@mui/icons-material/CloudQueue";
+import BugReport from "@mui/icons-material/BugReport";
+import WaterDrop from "@mui/icons-material/WaterDrop";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+import EventNote from "@mui/icons-material/EventNote";
+import Storefront from "@mui/icons-material/Storefront";
+import Description from "@mui/icons-material/Description";
+import Notifications from "@mui/icons-material/Notifications";
+import SmartToy from "@mui/icons-material/SmartToy";
+import Person from "@mui/icons-material/Person";
+import Settings from "@mui/icons-material/Settings";
+import Grass from "@mui/icons-material/Grass";
 
 const drawerWidth = 280;
 

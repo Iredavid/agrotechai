@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Paper, TextField, InputAdornment } from '@mui/material';
 import DashboardCard from '../../components/ui/DashboardCard';
-import { Science, Calculate, Description } from '@mui/icons-material';
+import Science from '@mui/icons-material/Science';
+import Calculate from '@mui/icons-material/Calculate';
+import Description from '@mui/icons-material/Description';
 
 const FertilizerAdvisor: React.FC = () => {
   return (

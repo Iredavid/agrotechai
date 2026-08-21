@@ -12,12 +12,10 @@ import {
   CircularProgress,
   Collapse,
 } from "@mui/material";
-import {
-  Agriculture,
-  Landscape,
-  WaterDrop,
-  MyLocation,
-} from "@mui/icons-material";
+import  Agriculture  from "@mui/icons-material/Agriculture";
+import  Landscape  from "@mui/icons-material/Landscape";
+import  WaterDrop  from "@mui/icons-material/WaterDrop";
+import  MyLocation  from "@mui/icons-material/MyLocation";
 import { useNavigate } from "react-router-dom";
 import GlassCard from "../components/ui/GlassCard";
 import { useAuth } from "../context/AuthContext";
@@ -108,7 +106,7 @@ const FarmerOnboarding: React.FC = () => {
       staleTime: 1000 * 60 * 60,
     });
   };
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const { userData, userProfile } = useAuth();
 
   const [locating, setLocating] = useState(false);

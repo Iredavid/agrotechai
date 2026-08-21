@@ -10,12 +10,12 @@ import {
   List,
   ListItem,
 } from "@mui/material";
-import {
-  Menu as MenuIcon,
-  Close as CloseIcon,
-  DarkMode,
-  LightMode,
-} from "@mui/icons-material";
+
+import DarkMode from "@mui/icons-material/DarkMode";
+import LightMode from "@mui/icons-material/LightMode";
+import Menu from "@mui/icons-material/Menu";
+import Close from "@mui/icons-material/Close";
+
 import { motion } from "framer-motion";
 
 interface NavbarProps {
@@ -73,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleTheme, mode }) => {
           borderBottom: scrolled
             ? `1px solid ${theme.palette.divider}`
             : "1px solid transparent",
-          padding: "16px 0",
+          padding: "12px 0",
         }}
       >
         <Container maxWidth="lg">
@@ -206,7 +206,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleTheme, mode }) => {
                 )}
               </IconButton>
               <IconButton onClick={() => setMobileOpen(true)} color="inherit">
-                <MenuIcon />
+                <Menu />
               </IconButton>
             </Box>
           </Box>
@@ -269,7 +269,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleTheme, mode }) => {
             </span>
           </Box>
           <IconButton onClick={() => setMobileOpen(false)}>
-            <CloseIcon />
+            <Close />
           </IconButton>
         </Box>
         <List>

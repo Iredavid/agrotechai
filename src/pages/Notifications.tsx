@@ -1,7 +1,12 @@
 import React from 'react';
-import { Box, Typography, Paper, IconButton, Chip } from '@mui/material';
+import { Box, Typography, Paper, IconButton} from '@mui/material';
 import DashboardCard from '../components/ui/DashboardCard';
-import { Warning, Info, Cloud, LocalFlorist, CheckCircle, Delete } from '@mui/icons-material';
+import Info from '@mui/icons-material/Info';
+import Cloud from '@mui/icons-material/Cloud';
+import LocalFlorist from '@mui/icons-material/LocalFlorist';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import Delete from '@mui/icons-material/Delete';
+
 
 const Notifications: React.FC = () => {
   return (

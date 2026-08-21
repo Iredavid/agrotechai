@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Typography, TextField, IconButton, Paper, Avatar, useTheme } from '@mui/material';
-import { Send, SmartToy, Person } from '@mui/icons-material';
+import  SmartToy  from '@mui/icons-material/SmartToy';
+import  Send  from '@mui/icons-material/Send';
+import  Person  from '@mui/icons-material/Person';
 
 const AIAssistant: React.FC = () => {
   const theme = useTheme();
@@ -61,7 +63,7 @@ const AIAssistant: React.FC = () => {
             variant="outlined"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             InputProps={{
               endAdornment: (
                 <IconButton color="primary" onClick={handleSend} disabled={!input.trim()}>

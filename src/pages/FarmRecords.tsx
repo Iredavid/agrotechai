@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box, Typography, Grid, Paper, Button, TextField, InputAdornment } from '@mui/material';
 import DashboardCard from '../components/ui/DashboardCard';
-import { Add, Search, ReceiptLong, AccountBalanceWallet } from '@mui/icons-material';
+import Add from '@mui/icons-material/Add';
+import Search from '@mui/icons-material/Search';
+import ReceiptLong from '@mui/icons-material/ReceiptLong';
+import AccountBalanceWallet from '@mui/icons-material/AccountBalanceWallet';
 
 const FarmRecords: React.FC = () => {
   return (

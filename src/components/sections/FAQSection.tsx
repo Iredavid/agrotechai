@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Container, Accordion, AccordionSummary, AccordionDetails, Typography, useTheme } from '@mui/material';
-import { ExpandMore } from '@mui/icons-material';
+import  ExpandMore  from '@mui/icons-material/ExpandMore';
 import SectionTitle from '../ui/SectionTitle';
 
 const faqs = [

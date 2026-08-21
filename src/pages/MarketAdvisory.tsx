@@ -2,7 +2,10 @@ import React from 'react';
 import { Box, Typography, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Button } from '@mui/material';
 import DashboardCard from '../components/ui/DashboardCard';
 import { mockMarket } from '../utils/mockData';
-import { TrendingUp, TrendingDown, TrendingFlat } from '@mui/icons-material';
+import TrendingUp from '@mui/icons-material/TrendingUp';
+import TrendingDown from '@mui/icons-material/TrendingDown';
+import TrendingFlat from '@mui/icons-material/TrendingFlat';
+
 
 const MarketAdvisory: React.FC = () => {
   return (

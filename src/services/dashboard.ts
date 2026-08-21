@@ -5,7 +5,7 @@ export async function getWeather(latitude: number, longitude: number) {
 
   console.log(longitude, latitude);
 
-  const response = await fetch("http://127.0.0.1:8000/currentweather", {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/currentweather`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export async function forecast(latitude: number, longitude: number) {
 
   console.log(longitude, latitude);
 
-  const response = await fetch("http://127.0.0.1:8000/forecast", {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/forecast`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export async function forecast(latitude: number, longitude: number) {
 
 export async function getUserData(userId?: string) {
   const response = await fetch(
-    `http://127.0.0.1:8000/getUserData?userId=${encodeURIComponent(userId ?? "")}`,
+    `${import.meta.env.VITE_API_BASE_URL}/getUserData?userId=${encodeURIComponent(userId ?? "")}`,
     {
       method: "GET",
       headers: {
@@ -68,4 +68,18 @@ export async function getUserData(userId?: string) {
   );
   const data = response.json();
   return data;
+}
+
+export function formatLabel(value: string): string {
+  if (!value) return "";
+
+  return value
+    .replace(/[_-]+/g, " ")        // underscores/hyphens -> spaces
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase -> split words
+    .trim()
+    .toLowerCase()
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

@@ -11,14 +11,12 @@ import {
   Skeleton,
 } from "@mui/material";
 import DashboardCard from "../components/ui/DashboardCard";
-import {
-  Cloud,
-  WaterDrop,
-  LocalFlorist,
-  TrendingUp,
-  Warning,
-  SmartToy,
-} from "@mui/icons-material";
+import Cloud from "@mui/icons-material/Cloud";
+import WaterDrop from "@mui/icons-material/WaterDrop";
+import LocalFlorist from "@mui/icons-material/LocalFlorist";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+import Warning from "@mui/icons-material/Warning";
+import SmartToy from "@mui/icons-material/SmartToy";
 import { mockHealth, mockTasks, recentActivity } from "../utils/mockData";
 import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
@@ -45,7 +43,7 @@ const Dashboard: React.FC<any> = () => {
         setWeatherLoading(false);
       }
     }
-    // loadWeather();
+    loadWeather();
   }, []);
 
   return (
@@ -56,7 +54,6 @@ const Dashboard: React.FC<any> = () => {
           justifyContent: "space-between",
           alignItems: "center",
           mb: 4,
-
         }}
       >
         <Box>
@@ -297,8 +294,7 @@ const Dashboard: React.FC<any> = () => {
           size={{
             xs: 12,
             md: 5,
-                        lg: 4,
-
+            lg: 4,
           }}
         >
           <motion.div

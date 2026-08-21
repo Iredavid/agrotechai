@@ -8,19 +8,16 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
-import {
-  Visibility,
-  VisibilityOff,
-  Email,
-  Lock,
-  Person,
-} from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Email from "@mui/icons-material/Email";
+import Lock from "@mui/icons-material/Lock";
+import Person from "@mui/icons-material/Person";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GlassCard from "../components/ui/GlassCard";
 import { register } from "../services/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { getData } from "../services/onboarding";
-
 
 const Register: React.FC = () => {
   const queryClient = useQueryClient();

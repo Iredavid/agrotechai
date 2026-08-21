@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Paper, useTheme } from "@mui/material";
 import DashboardCard from "../../components/ui/DashboardCard";
-import {
-  Cloud,
-  WbSunny,
-  Opacity,
-  Air,
-  WarningAmber,
-} from "@mui/icons-material";
+import Cloud from "@mui/icons-material/Cloud";
+import WbSunny from "@mui/icons-material/WbSunny";
+import Opacity from "@mui/icons-material/Opacity";
+import Air from "@mui/icons-material/Air";
+import WarningAmber from "@mui/icons-material/WarningAmber";
 import { motion } from "framer-motion";
 import { forecast } from "../../services/dashboard";
 import { useAuth } from "../../context/AuthContext";

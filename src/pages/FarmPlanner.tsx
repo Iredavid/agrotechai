@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box, Typography, Grid, Paper, Button, IconButton, Chip } from '@mui/material';
 import DashboardCard from '../components/ui/DashboardCard';
-import { Add, ChevronLeft, ChevronRight, CheckCircle, RadioButtonUnchecked } from '@mui/icons-material';
+import ChevronLeft  from '@mui/icons-material/ChevronLeft';
+import ChevronRight  from '@mui/icons-material/ChevronRight';
+import CheckCircle  from '@mui/icons-material/CheckCircle';
+import RadioButtonUnchecked  from '@mui/icons-material/RadioButtonUnchecked';
 
 const tasks = [
   { id: 1, date: '12', day: 'Mon', title: 'Apply Urea Top Dressing', crop: 'Maize Field A', completed: false, type: 'fertilizer' },

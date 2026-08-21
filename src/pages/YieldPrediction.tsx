@@ -1,7 +1,8 @@
 import React from "react";
 import { Box, Typography, Grid, Paper, Button, useTheme } from "@mui/material";
 import DashboardCard from "../components/ui/DashboardCard";
-import { TrendingUp, Assessment } from "@mui/icons-material";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+import  Assessment from "@mui/icons-material/Assessment";
 import { motion } from "framer-motion";
 
 const YieldPrediction: React.FC = () => {

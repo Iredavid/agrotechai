@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Paper, Alert } from '@mui/material';
 import DashboardCard from '../../components/ui/DashboardCard';
-import { BugReport, CameraAlt, Upload } from '@mui/icons-material';
+import BugReport from '@mui/icons-material/BugReport';
+import CameraAlt from '@mui/icons-material/CameraAlt';
+import Upload from '@mui/icons-material/Upload';
 
 const PestAdvisor: React.FC = () => {
   return (

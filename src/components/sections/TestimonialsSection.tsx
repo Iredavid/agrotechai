@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import SectionTitle from "../ui/SectionTitle";
 import GlassCard from "../ui/GlassCard";
-import { Star } from "@mui/icons-material";
+import  Star  from "@mui/icons-material/Star";
 import { motion } from "framer-motion";
 
 const testimonials = [

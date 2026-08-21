@@ -2,14 +2,13 @@ import React from "react";
 import { Box, Container, Grid, useTheme } from "@mui/material";
 import SectionTitle from "../ui/SectionTitle";
 import FeatureCard from "../ui/FeatureCard";
-import {
-  Grass,
-  CloudQueue,
-  BugReport,
-  TrendingUp,
-  EventNote,
-  SmartToy,
-} from "@mui/icons-material";
+import  Grass  from '@mui/icons-material/Grass';
+import  CloudQueue  from '@mui/icons-material/CloudQueue';
+import  BugReport  from '@mui/icons-material/BugReport';
+import  TrendingUp  from '@mui/icons-material/TrendingUp';
+import  EventNote  from '@mui/icons-material/EventNote';
+import  SmartToy  from '@mui/icons-material/SmartToy';
+
 
 const features = [
   {

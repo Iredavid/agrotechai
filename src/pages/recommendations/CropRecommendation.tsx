@@ -8,9 +8,13 @@ import {
   Chip,
 } from "@mui/material";
 import DashboardCard from "../../components/ui/DashboardCard";
-import { Grass, Spa, TrendingUp } from "@mui/icons-material";
+import Grass from "@mui/icons-material/Grass";
+import Spa from "@mui/icons-material/Spa";
+import TrendingUp from "@mui/icons-material/TrendingUp";
+
 import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
+import { formatLabel } from "../../services/dashboard";
 
 const CropRecommendation: React.FC = () => {
   const { userProfile } = useAuth();
@@ -156,7 +160,7 @@ const CropRecommendation: React.FC = () => {
               style={{ height: "100%" }}
             >
               <DashboardCard
-                title={insight.crop}
+                title={formatLabel(insight.crop)}
                 action={
                   <Chip
                     label={`${insight.confidence}% Match`}

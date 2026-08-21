@@ -13,7 +13,10 @@ import {
   Divider,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { Person, Email, Lock, Edit } from "@mui/icons-material";
+import  Person from "@mui/icons-material/Person";
+import  Email from "@mui/icons-material/Email";
+import  Lock from "@mui/icons-material/Lock";
+import  Edit from "@mui/icons-material/Edit";
 import DashboardCard from "../components/ui/DashboardCard";
 import { useAuth } from "../context/AuthContext";
 import { getData } from "../services/onboarding";
@@ -53,7 +56,7 @@ const Profile: React.FC = () => {
   });
   // const queryClient = useQueryClient();
   const soilOptions = useMemo(() => data?.soil ?? [], [data]);
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const { userData, userProfile } = useAuth();
 
   // ---------------- Account form state ----------------

@@ -1,6 +1,6 @@
 // components/ui/FullPageLoader.tsx
 import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
-import { LocalFlorist } from "@mui/icons-material";
+import  LocalFlorist  from "@mui/icons-material/LocalFlorist";
 import { motion } from "framer-motion";
 
 type FullPageLoaderProps = {

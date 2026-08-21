@@ -8,7 +8,10 @@ import {
   IconButton,
   Alert,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Email, Lock } from "@mui/icons-material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Email from "@mui/icons-material/Email";
+import Lock from "@mui/icons-material/Lock";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GlassCard from "../components/ui/GlassCard";
 import { signIn } from "../services/auth";
