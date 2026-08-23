@@ -53,7 +53,7 @@ const Register: React.FC = () => {
 
     try {
       await register(formData);
-      console.log("Registration successful:");
+      // console.log("Registration successful:");
       queryClient.prefetchQuery({
         queryKey: ["onboarding-options"],
         queryFn: async () => {
@@ -68,8 +68,8 @@ const Register: React.FC = () => {
       });
       navigate("/onboarding");
     } catch (error: any) {
-      console.log("CAUGHT ERROR:", error); // add this
-      console.error("Registration failed:", error);
+      // console.log("CAUGHT ERROR:", error); // add this
+      // console.error("Registration failed:", error);
       const errorMessage = error.message;
       setError(errorMessage);
     } finally {

@@ -45,7 +45,10 @@ const Hero: React.FC = () => {
         }}
       />
 
-      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
+      <Container
+        maxWidth="lg"
+        sx={{ position: "relative", zIndex: 1, paddingTop: { xs: 2, md: 0 } }}
+      >
         <Grid
           container
           sx={{
@@ -101,7 +104,7 @@ const Hero: React.FC = () => {
                 sx={{
                   fontSize: { xs: "1rem", md: "1.2rem" },
                   color: "text.secondary",
-                  mb: 5,
+                  mb: 3,
                   maxWidth: "500px",
                   lineHeight: 1.6,
                 }}
@@ -117,18 +120,16 @@ const Hero: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                <Button
-                  component={RouterLink}
-                  to="/register"
-                  variant="contained"
-                  size="large"
-                  endIcon={<ArrowForward />}
-                  sx={{ py: 1.5, px: 3, fontSize: "1.1rem" }}
-                >
-                  Start Farming Smarter
-                </Button>
-              </Box>
+              <Button
+                component={RouterLink}
+                to="/register"
+                variant="contained"
+                size="large"
+                endIcon={<ArrowForward />}
+                sx={{ py: 1.5, px: 3, fontSize: "1.1rem" }}
+              >
+                Start Farming Smarter
+              </Button>
             </motion.div>
           </Grid>
 
@@ -148,13 +149,17 @@ const Hero: React.FC = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              style={{ width: "100%", display: "flex", justifyContent: "center" }}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
             >
               <Box
                 sx={{
                   position: "relative",
-                  width: { xs: "100%", sm: "500px", md: "100%", xxs: "100px" },
-                  height: { xs: "100%", sm: 450 },
+                  width: { xs: "100%", sm: "500px", md: "100%" },
+                  height: { xs: "350px", sm: "450px" },
                   borderRadius: "24px",
                   background: (theme) =>
                     theme.palette.mode === "dark"
@@ -177,8 +182,6 @@ const Hero: React.FC = () => {
                   overflow: "visible",
                 }}
               >
-                {/* Farmer photo replaces the mock dashboard */}
-                {/* Image wrapper — clips the image hover effect */}
                 <Box
                   sx={{
                     position: "relative",
@@ -266,8 +269,8 @@ const Hero: React.FC = () => {
                 <Box
                   sx={{
                     position: "absolute",
-                    top: { xs: 20, sm: 40 },
-                    right: { xs: -15, sm: -30 },
+                    top: { xs: 30, sm: 40 },
+                    right: { xs: -10, sm: -30 },
                     width: 180,
                     height: 70,
                     bgcolor: "background.paper",
@@ -315,7 +318,7 @@ const Hero: React.FC = () => {
                   sx={{
                     position: "absolute",
                     bottom: { xs: 30, sm: 60 },
-                    left: { xs: -15, sm: -30 },
+                    left: { xs: -10, sm: -30 },
                     width: 180,
                     height: 70,
                     bgcolor: "background.paper",

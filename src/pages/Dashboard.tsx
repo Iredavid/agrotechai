@@ -45,6 +45,45 @@ const Dashboard: React.FC<any> = () => {
     }
     loadWeather();
   }, []);
+  type HealthStatusColor = "primary" | "warning" | "error";
+
+  const getHealthStatus = (
+    score: number,
+  ): {
+    status: string;
+    color: HealthStatusColor;
+    message: string;
+  } => {
+    if (score >= 80) {
+      return {
+        status: "Excellent",
+        color: "primary",
+        message: "Your health condition is excellent.",
+      };
+    }
+
+    if (score >= 60) {
+      return {
+        status: "Good",
+        color: "warning",
+        message: "Your health condition is moderate.",
+      };
+    }
+
+    // if (score >= 40) {
+    //   return {
+    //     status: "Fair",
+    //     color: "warning",
+    //     message: "Your health condition needs some attention.",
+    //   };
+    // }
+
+    return {
+      status: "Poor",
+      color: "error",
+      message: "Your health condition needs attention.",
+    };
+  };
 
   return (
     <Box>
@@ -214,33 +253,37 @@ const Dashboard: React.FC<any> = () => {
                       </Typography>
                     </Box>
                   </Box>
-
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      mt: 2,
-                      color: "text.secondary",
-                      textAlign: "center",
-                    }}
-                  >
-                    {Math.round(userProfile?.farm_health_score ?? 0) >= 80
-                      ? "Excellent condition"
-                      : Math.round(userProfile?.farm_health_score ?? 0) >= 60
-                        ? "Moderate condition"
-                        : "Needs attention"}
-                  </Typography>
                 </Box>
                 <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" sx={{ mb: 2 }}>
+                  <Typography variant="h6" sx={{ mb: 0 }}>
                     Status:{" "}
                     <span
                       style={{
-                        color: theme.palette.primary.main,
+                        color:
+                          theme.palette[
+                            getHealthStatus(userProfile?.farm_health_score ?? 0)
+                              .color
+                          ].main,
                         textTransform: "capitalize",
                       }}
                     >
-                      {mockHealth.status}
+                      {
+                        getHealthStatus(userProfile?.farm_health_score ?? 0)
+                          .status
+                      }
                     </span>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      mb: 2,
+                      color: "text.secondary",
+                    }}
+                  >
+                    {
+                      getHealthStatus(userProfile?.farm_health_score ?? 0)
+                        .message
+                    }
                   </Typography>
                   <Grid container spacing={2}>
                     <Grid

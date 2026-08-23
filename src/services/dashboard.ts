@@ -3,7 +3,7 @@ export async function getWeather(latitude: number, longitude: number) {
     throw new Error("Geolocation is not supported by this browser");
   }
 
-  console.log(longitude, latitude);
+  // console.log(longitude, latitude);
 
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/currentweather`, {
     method: "POST",
@@ -23,7 +23,7 @@ export async function getWeather(latitude: number, longitude: number) {
   const weatherData = await response.json();
 
   const data = weatherData;
-  console.log(data);
+  // console.log(data);
   return data;
 }
 
@@ -32,7 +32,7 @@ export async function forecast(latitude: number, longitude: number) {
     throw new Error("Geolocation is not supported by this browser");
   }
 
-  console.log(longitude, latitude);
+  // console.log(longitude, latitude);
 
   const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/forecast`, {
     method: "POST",
@@ -52,7 +52,7 @@ export async function forecast(latitude: number, longitude: number) {
   const weatherData = await response.json();
 
   const data = weatherData;
-  console.log(data);
+  // console.log(data);
   return data;
 }
 

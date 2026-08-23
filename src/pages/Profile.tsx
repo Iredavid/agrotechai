@@ -129,7 +129,7 @@ const Profile: React.FC = () => {
     // lon: null,
   });
   useEffect(() => {
-    console.log("userProfile changed:", userProfile);
+    // console.log("userProfile changed:", userProfile);
     if (!userProfile) return;
     setFarmData((prev) => ({
       ...prev,

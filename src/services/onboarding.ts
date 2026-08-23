@@ -51,6 +51,6 @@ export async function getLongLat(state: string): Promise<{
   const weatherData = await response.json();
 
   const data = weatherData;
-  console.log(data);
+  // console.log(data);
   return data;
 }

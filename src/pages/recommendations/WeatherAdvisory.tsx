@@ -38,10 +38,10 @@ const WeatherAdvisory: React.FC = () => {
       try {
         setforecastLoading(true);
         const data = await forecast(userProfile.lat, userProfile.lon);
-        console.log("Forecast data:", data);
+        // console.log("Forecast data:", data);
         setforecastData(data);
       } catch (error) {
-        console.error("Unable to load forecast data:", error);
+        // console.error("Unable to load forecast data:", error);
       } finally {
         setforecastLoading(false);
       }

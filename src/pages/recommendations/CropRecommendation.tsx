@@ -18,7 +18,7 @@ import { formatLabel } from "../../services/dashboard";
 
 const CropRecommendation: React.FC = () => {
   const { userProfile } = useAuth();
-  console.log("userProfile:", userProfile);
+  // console.log("userProfile:", userProfile);
   const getPhDisplay = (ph: number) => {
     if (ph < 5.5) return { label: "Acidic", progress: 30 };
     if (ph < 6.5) return { label: "Slightly Acidic", progress: 60 };

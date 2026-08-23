@@ -125,7 +125,7 @@ const FarmerOnboarding: React.FC = () => {
     string | null
   >(null);
   useEffect(() => {
-    console.log("userProfile changed:", userProfile);
+    // console.log("userProfile changed:", userProfile);
     if (!userProfile) return;
     setFormData((prev) => ({
       ...prev,
@@ -200,7 +200,7 @@ const FarmerOnboarding: React.FC = () => {
       );
     } catch (err) {
       setLocating(false);
-      console.log(err);
+        // console.log(err);
       const error = err as GeolocationPositionError;
 
       switch (error.code) {
@@ -250,13 +250,13 @@ const FarmerOnboarding: React.FC = () => {
         setLocation(coords);
       }
 
-      console.log(
-        coords?.latitude,
-        coords?.longitude,
-        Number(formData.farmSize),
-        formData.soilType,
-        formData.irrigationMethod,
-      );
+      // console.log(
+      //   coords?.latitude,
+      //   coords?.longitude,
+      //   Number(formData.farmSize),
+      //   formData.soilType,
+      //   formData.irrigationMethod,
+      // );
       const farmData = {
         lat: coords?.latitude,
         lon: coords?.longitude,
