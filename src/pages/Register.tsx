@@ -15,7 +15,7 @@ import Lock from "@mui/icons-material/Lock";
 import Person from "@mui/icons-material/Person";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GlassCard from "../components/ui/GlassCard";
-import { register } from "../services/auth";
+import { mapFirebaseAccountError, register } from "../services/auth";
 import { useQueryClient } from "@tanstack/react-query";
 import { getData } from "../services/onboarding";
 
@@ -71,7 +71,7 @@ const Register: React.FC = () => {
       // console.log("CAUGHT ERROR:", error); // add this
       // console.error("Registration failed:", error);
       const errorMessage = error.message;
-      setError(errorMessage);
+      setError(mapFirebaseAccountError(errorMessage));
     } finally {
       setloading(false);
     }

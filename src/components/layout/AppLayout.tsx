@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Box, CssBaseline } from "@mui/material";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -13,17 +13,48 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ toggleTheme, mode }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { userData, loading, userProfile, profileLoading, refreshProfile } =
-    useAuth();
+  const {
+    userData,
+    loading,
+    userProfile,
+    profileLoading,
+    profileError,
+    refreshProfile,
+  } = useAuth();
+  const navigate = useNavigate();
   const fetchedFor = useRef<string | null>(null);
+
+  // Tracks which error instance we've already reacted to, so a persisting
+  // error doesn't re-trigger the redirect on every re-render.
+  const handledErrorRef = useRef<Error | null>(null);
+
   useEffect(() => {
     if (!loading && userData?.uid && fetchedFor.current !== userData.uid) {
       fetchedFor.current = userData.uid;
       refreshProfile();
     }
   }, [loading, userData?.uid]);
+
+  useEffect(() => {
+    if (profileError && handledErrorRef.current !== profileError) {
+      handledErrorRef.current = profileError;
+
+      const message =
+        profileError.message ||
+        "Could not load your farm data. Please sign in again.";
+      navigate("/login", {
+        replace: true,
+        state: { authErrorMessage: message },
+      });
+    }
+
+    if (!profileError) {
+      handledErrorRef.current = null;
+    }
+  }, [profileError, navigate]);
+
   if (loading) return <FullPageLoader message="Checking your session..." />;
-  if (profileLoading || !userProfile) {
+  if (!profileError && (profileLoading || !userProfile)) {
     return <FullPageLoader message="Loading your farm data..." />;
   }
 
@@ -36,8 +67,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ toggleTheme, mode }) => {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        alignItems: "flex-start", // ← add this
-
+        alignItems: "flex-start",
         bgcolor: "background.default",
       }}
     >
@@ -62,7 +92,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ toggleTheme, mode }) => {
           mode={mode}
         />
         <Box sx={{ flexGrow: 1, p: { xs: 2, md: 4 }, overflow: "auto" }}>
-          <Outlet />
+          {userProfile ? <Outlet /> : null}
         </Box>
       </Box>
     </Box>

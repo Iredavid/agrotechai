@@ -14,7 +14,7 @@ import Email from "@mui/icons-material/Email";
 import Lock from "@mui/icons-material/Lock";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import GlassCard from "../components/ui/GlassCard";
-import { signIn } from "../services/auth";
+import { mapFirebaseAccountError, signIn } from "../services/auth";
 import { getData } from "../services/onboarding";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -67,7 +67,7 @@ const Login: React.FC = () => {
       // console.log("CAUGHT ERROR:", error); // add this
       // console.error("Registration failed:", error);
       const errorMessage = error.message;
-      setError(errorMessage);
+      setError(mapFirebaseAccountError(errorMessage));
     } finally {
       setloading(false);
     }

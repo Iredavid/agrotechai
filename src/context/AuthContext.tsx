@@ -17,6 +17,7 @@ type AuthContextType = {
   loading: boolean;
   userProfile: any | null;
   profileLoading: boolean;
+  profileError: Error | null;
   refreshProfile: () => Promise<void>;
 };
 
@@ -82,9 +83,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       loading,
       userProfile: profileQuery.data ?? null,
       profileLoading: profileQuery.isFetching,
+      profileError: (profileQuery.error as Error) ?? null,
       refreshProfile,
     }),
-    [user, loading, profileQuery.data, profileQuery.isFetching],
+    [
+      user,
+      loading,
+      profileQuery.data,
+      profileQuery.isFetching,
+      profileQuery.error,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

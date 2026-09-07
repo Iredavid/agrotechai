@@ -16,6 +16,17 @@ import { motion } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { formatLabel } from "../../services/dashboard";
 
+const PLANTING_GUIDE_URLS: Record<string, string> = {
+  maize: "https://wikifarmer.com/library/en/category/maize-corn",
+  rice: "https://wikifarmer.com/library/en/category/rice-plant",
+  cassava: "https://wikifarmer.com/library/en/category/cassava",
+  millet: "https://wikifarmer.com/library/en/category/millets",
+  cocoa: "https://wikifarmer.com/library/en/category/cacao-tree",
+  sorghum: "https://wikifarmer.com/library/en/tag/sorghum",
+  yam: "https://wikifarmer.com/library/en/article/yam-history-uses-and-plant-information",
+  oil_palm: "https://www.agrifarming.in/oil-palm-cultivation",
+};
+
 const CropRecommendation: React.FC = () => {
   const { userProfile } = useAuth();
   // console.log("userProfile:", userProfile);
@@ -42,6 +53,14 @@ const CropRecommendation: React.FC = () => {
     }
     return { label: "High", progress: 90 };
   };
+
+  const handleViewPlantingGuide = (crop: string) => {
+    const url = PLANTING_GUIDE_URLS[crop];
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
@@ -199,7 +218,13 @@ const CropRecommendation: React.FC = () => {
                       </strong>
                     </Typography>
                   </Box>
-                  <Button variant="outlined" fullWidth sx={{ mt: 1 }}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ mt: 1 }}
+                    onClick={() => handleViewPlantingGuide(insight.crop)}
+                    disabled={!PLANTING_GUIDE_URLS[insight.crop]}
+                  >
                     View Planting Guide
                   </Button>
                 </Box>

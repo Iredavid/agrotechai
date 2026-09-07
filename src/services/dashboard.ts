@@ -5,16 +5,19 @@ export async function getWeather(latitude: number, longitude: number) {
 
   // console.log(longitude, latitude);
 
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/currentweather`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/currentweather`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        lon: longitude,
+        lat: latitude,
+      }),
     },
-    body: JSON.stringify({
-      lon: longitude,
-      lat: latitude,
-    }),
-  });
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch weather data: ${response.status}`);
@@ -34,16 +37,19 @@ export async function forecast(latitude: number, longitude: number) {
 
   // console.log(longitude, latitude);
 
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/forecast`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/forecast`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        lon: longitude,
+        lat: latitude,
+      }),
     },
-    body: JSON.stringify({
-      lon: longitude,
-      lat: latitude,
-    }),
-  });
+  );
 
   if (!response.ok) {
     throw new Error(`Failed to fetch weather data: ${response.status}`);
@@ -66,15 +72,21 @@ export async function getUserData(userId?: string) {
       },
     },
   );
-  const data = response.json();
-  return data;
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(
+      body?.detail ?? `Failed to load farm data (status ${response.status}).`,
+    );
+  }
+
+  return await response.json();
 }
 
 export function formatLabel(value: string): string {
   if (!value) return "";
 
   return value
-    .replace(/[_-]+/g, " ")        // underscores/hyphens -> spaces
+    .replace(/[_-]+/g, " ") // underscores/hyphens -> spaces
     .replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase -> split words
     .trim()
     .toLowerCase()

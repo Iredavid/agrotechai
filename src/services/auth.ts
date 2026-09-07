@@ -23,8 +23,6 @@ export async function register({
     await updateProfile(userCredential.user, {
       displayName: fullName,
     });
-
-    // return userCredential.user;
   } catch (error) {
     throw error;
   }
@@ -32,35 +30,43 @@ export async function register({
 
 export async function signIn({ email, password }: any) {
   return signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-    })
+    .then()
     .catch((error) => {
       throw error;
     });
 }
 
+export async function updateUser(fullName: string, userId: string) {
+  try {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/updateUser`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fullName,
+        userId: userId,
+      }),
+    });
+  } catch (err) {
+    throw err;
+  }
+}
 
-
-
-
-
-
-// const response = await fetch("http://127.0.0.1:8000/register", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({
-//     ...formData,
-//   }),
-// });
-// const data = await response.json();
-
-// if (!response.ok) {
-//   throw new Error(
-//     typeof data.detail === "string" ? data.detail : "Registration failed",
-//   );
-// }
-
-// return data;
+export function mapFirebaseAccountError(code?: string): string {
+  switch (code) {
+    case "auth/wrong-password":
+    case "auth/invalid-credential":
+      return "Current password is incorrect.";
+    case "auth/requires-recent-login":
+      return "For security, please re-enter your current password and try again.";
+    case "auth/email-already-in-use":
+      return "That email address is already in use by another account.";
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+    case "auth/weak-password":
+      return "New password is too weak -- use at least 6 characters.";
+    case "auth/too-many-requests":
+      return "Too many attempts. Please wait a moment and try again.";
+    default:
+      return "Something went wrong updating your account. Please try again.";
+  }
+}

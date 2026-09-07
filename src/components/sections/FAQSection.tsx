@@ -8,10 +8,10 @@ const faqs = [
     question: "Do I need an internet connection to use AgroTech AI?",
     answer: "While an internet connection is required for live updates and the AI assistant, the app caches your daily schedule and offline recommendations so you can access crucial information while in the field."
   },
-  {
-    question: "Is the app available in local languages?",
-    answer: "Currently, we support English, Pidgin, Hausa, Yoruba, and Igbo. We are working on adding more local dialects to ensure accessibility for all farmers."
-  },
+  // {
+  //   question: "Is the app available in local languages?",
+  //   answer: "Currently, we support English, Pidgin, Hausa, Yoruba, and Igbo. We are working on adding more local dialects to ensure accessibility for all farmers."
+  // },
   {
     question: "How accurate is the weather advisory?",
     answer: "We use a combination of satellite imagery, local weather stations, and AI modeling to provide hyper-local forecasts that are significantly more accurate for your specific farm location than general weather apps."

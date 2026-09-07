@@ -51,12 +51,14 @@ const ForgotPassword: React.FC = () => {
             label="Email Address"
             variant="outlined"
             placeholder="farmer@example.com"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email color="action" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Email color="action" />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
 

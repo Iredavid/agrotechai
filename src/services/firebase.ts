@@ -19,10 +19,3 @@ const app = initializeApp(firebaseConfig);
 // Export services for use in components
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-
-  // async function fetchUsers() {
-  //   const querySnapshot = await getDocs(collection(db, "testing"));
-  //   querySnapshot.forEach((doc) => {
-  //     console.log(`${doc.id} => ${doc.data()}`);
-  //   });
-  // }

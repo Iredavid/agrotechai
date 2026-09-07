@@ -19,8 +19,8 @@ const CTASection: React.FC = () => {
         >
           <Box
             sx={{
-              maxWidth:"991px",
-              marginInline:"auto",
+              maxWidth: "991px",
+              marginInline: "auto",
               borderRadius: "32px",
               bgcolor: "primary.main",
               background: "linear-gradient(135deg, #1B5E20 0%, #43A047 100%)",
@@ -53,7 +53,7 @@ const CTASection: React.FC = () => {
                 sx={{
                   fontWeight: 700,
                   mb: 3,
-                  fontSize: { xs: "1.5rem",sm:"2rem", md: "2.5rem" },
+                  fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
                 }}
               >
                 Ready to transform your farm?
@@ -97,23 +97,6 @@ const CTASection: React.FC = () => {
                 >
                   Create Free Account
                 </Button>
-                {/* <Button
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    color: "white",
-                    borderColor: "rgba(255,255,255,0.5)",
-                    "&:hover": {
-                      borderColor: "white",
-                      bgcolor: "rgba(255,255,255,0.1)",
-                    },
-                    py: 1.5,
-                    px: 4,
-                    fontSize: "1.1rem",
-                  }}
-                >
-                  Contact Sales
-                </Button> */}
               </Box>
             </Box>
           </Box>

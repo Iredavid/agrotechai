@@ -17,7 +17,7 @@ import LocalFlorist from "@mui/icons-material/LocalFlorist";
 import TrendingUp from "@mui/icons-material/TrendingUp";
 import Warning from "@mui/icons-material/Warning";
 import SmartToy from "@mui/icons-material/SmartToy";
-import { mockHealth, mockTasks, recentActivity } from "../utils/mockData";
+import { mockTasks, recentActivity } from "../utils/mockData";
 import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
 import { getWeather } from "../services/dashboard";
@@ -29,6 +29,7 @@ const Dashboard: React.FC<any> = () => {
   const [weatherLoading, setWeatherLoading] = useState(true);
   const { userData, userProfile } = useAuth();
   console.log(userData?.uid);
+  console.log(userData, userProfile);
 
   useEffect(() => {
     async function loadWeather() {

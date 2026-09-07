@@ -11,7 +11,7 @@ interface SectionTitleProps {
 
 const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, align = 'center', light = false }) => {
   return (
-    <Box sx={{ mb: 6, textAlign: align }}>
+    <Box sx={{ mb: 3, textAlign: align }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -37,7 +37,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle, align = 'c
               color: light ? 'rgba(255,255,255,0.8)' : 'text.secondary',
               maxWidth: '600px',
               mx: align === 'center' ? 'auto' : 0,
-              fontSize: '1.125rem',
+              fontSize: '1rem',
             }}
           >
             {subtitle}

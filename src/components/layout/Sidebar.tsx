@@ -54,7 +54,7 @@ const navGroups = [
         name: "Fertilizer Advisor",
         path: "/recommendations/fertilizer",
         icon: <WaterDrop />,
-        disabled: true, // Disabled for now, can be enabled later
+        // disabled: true, // Disabled for now, can be enabled later
       },
       {
         name: "Pest Advisor",

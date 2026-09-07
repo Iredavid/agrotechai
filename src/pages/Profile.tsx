@@ -13,14 +13,22 @@ import {
   Divider,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import  Person from "@mui/icons-material/Person";
-import  Email from "@mui/icons-material/Email";
-import  Lock from "@mui/icons-material/Lock";
-import  Edit from "@mui/icons-material/Edit";
+import Person from "@mui/icons-material/Person";
+import Email from "@mui/icons-material/Email";
+import Lock from "@mui/icons-material/Lock";
+import Edit from "@mui/icons-material/Edit";
 import DashboardCard from "../components/ui/DashboardCard";
 import { useAuth } from "../context/AuthContext";
 import { getData } from "../services/onboarding";
 import { useQuery } from "@tanstack/react-query";
+import {
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
+  updateProfile,
+  verifyBeforeUpdateEmail,
+} from "firebase/auth";
+import { mapFirebaseAccountError, updateUser } from "../services/auth";
 
 interface AccountFormData {
   fullName: string;
@@ -56,13 +64,12 @@ const Profile: React.FC = () => {
   });
   // const queryClient = useQueryClient();
   const soilOptions = useMemo(() => data?.soil ?? [], [data]);
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const { userData, userProfile } = useAuth();
+  // const API_BASE = import.meta.env.VITE_API_BASE_URL;
+  const { userData, userProfile, refreshProfile } = useAuth();
 
-  // ---------------- Account form state ----------------
   const [accountData, setAccountData] = useState<AccountFormData>({
-    fullName: userData?.displayName || "",
-    email: userData?.email || "",
+    fullName: userData?.displayName ?? "",
+    email: userData?.email ?? "",
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -76,43 +83,70 @@ const Profile: React.FC = () => {
   ) => {
     const { name, value } = event.target;
     setAccountData((prev) => ({ ...prev, [name]: value }));
+    if (accountError) setAccountError(null);
+    if (accountSuccess) setAccountSuccess(null);
   };
+  const wantsEmailChange = accountData.email !== (userData?.email ?? "");
+  const wantsPasswordChange = accountData.newPassword.length > 0;
+  // Both email and password changes are "sensitive operations" in Firebase --
+  // both throw auth/requires-recent-login without a fresh reauthentication.
+  const wantsSensitiveChange = wantsEmailChange || wantsPasswordChange;
 
   const isAccountValid =
     accountData.fullName.trim().length > 0 &&
-    accountData.email.trim().length > 0 &&
-    (accountData.newPassword.length === 0 ||
-      accountData.newPassword === accountData.confirmPassword);
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(accountData.email) &&
+    (!wantsSensitiveChange || accountData.currentPassword.length > 0) &&
+    (!wantsPasswordChange ||
+      (accountData.newPassword.length >= 6 &&
+        accountData.newPassword === accountData.confirmPassword));
 
-  const handleAccountSubmit = async () => {
-    if (!isAccountValid) return;
+  const handleAccountSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!isAccountValid || !userData) return;
+    setSavingAccount(true);
     setSavingAccount(true);
     setAccountError(null);
     setAccountSuccess(null);
     try {
-      const res = await fetch(`${API_BASE}/updateAccount`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userData?.uid,
-          fullName: accountData.fullName,
-          email: accountData.email,
-          currentPassword: accountData.currentPassword || undefined,
-          newPassword: accountData.newPassword || undefined,
-        }),
-      });
-      if (!res.ok) throw new Error("Couldn't update your account details.");
-      setAccountSuccess("Account details updated.");
+      if (wantsSensitiveChange) {
+        const credential = EmailAuthProvider.credential(
+          userData.email!,
+          accountData.currentPassword,
+        );
+        await reauthenticateWithCredential(userData, credential);
+      }
+      if (accountData.fullName !== (userData?.displayName ?? "")) {
+        await updateProfile(userData, {
+          displayName: accountData.fullName,
+        });
+        await updateUser(accountData.fullName, userData.uid);
+      }
+
+      let emailChangeRequested = false;
+      if (wantsEmailChange) {
+        await verifyBeforeUpdateEmail(userData, accountData.email);
+        emailChangeRequested = true;
+      }
+
+      if (wantsPasswordChange) {
+        await updatePassword(userData, accountData.newPassword);
+      }
+
+      setAccountSuccess(
+        emailChangeRequested
+          ? "Account updated. Check your new email inbox and click the confirmation link to finish changing your email address."
+          : "Your account details have been updated.",
+      );
       setAccountData((prev) => ({
         ...prev,
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       }));
-    } catch (err) {
-      setAccountError(
-        err instanceof Error ? err.message : "Something went wrong.",
-      );
+
+      // await refreshProfile();
+    } catch (err: any) {
+      setAccountError(mapFirebaseAccountError(err?.code));
     } finally {
       setSavingAccount(false);
     }
@@ -142,7 +176,7 @@ const Profile: React.FC = () => {
   }, [userProfile]);
 
   return (
-    <Box sx={{ maxWidth: "lg", mx: "auto",  }}>
+    <Box sx={{ maxWidth: "lg", mx: "auto" }}>
       <Typography variant="h5" sx={{ fontWeight: 700, mb: 4 }}>
         Farmer Profile
       </Typography>
@@ -207,9 +241,6 @@ const Profile: React.FC = () => {
 
         {/* Right Column */}
         <Grid size={{ xs: 12, md: 8 }}>
-          {/* ---- Personal / Account Info Form ---- */}
-          {/* Responsive Button Container */}
-
           <DashboardCard
             title="Personal Information"
             action={
@@ -219,7 +250,6 @@ const Profile: React.FC = () => {
                 startIcon={<Edit />}
                 component={RouterLink}
                 to={"/onboarding"}
-                // onClick={handleEditFarmDetails}
                 sx={{
                   textTransform: "none",
                   borderRadius: 2,
@@ -230,135 +260,154 @@ const Profile: React.FC = () => {
               </Button>
             }
           >
-            <Grid container spacing={3} className="mt-4">
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  name="fullName"
-                  label="Full Name"
-                  value={accountData.fullName}
-                  onChange={handleAccountChange}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Person fontSize="small" />
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField
-                  fullWidth
-                  name="email"
-                  type="email"
-                  label="Email Address"
-                  value={accountData.email}
-                  onChange={handleAccountChange}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Email fontSize="small" />
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
+            <form onSubmit={handleAccountSubmit} noValidate>
+              <Grid container spacing={3} className="mt-4">
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    name="fullName"
+                    label="Full Name"
+                    value={accountData.fullName}
+                    onChange={handleAccountChange}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Person fontSize="small" />
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <TextField
+                    fullWidth
+                    name="email"
+                    type="email"
+                    label="Email Address"
+                    value={accountData.email}
+                    onChange={handleAccountChange}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Email fontSize="small" />
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Grid>
 
-              <Grid size={{ xs: 12 }}>
-                <Divider sx={{ my: 1 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    CHANGE PASSWORD (optional)
-                  </Typography>
-                </Divider>
-              </Grid>
+                {!isAccountValid ? (
+                  <Grid size={{ xs: 12 }}>
+                    <Divider sx={{ my: 1 }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Re-authentication on current password required for
+                        sensitive changes
+                      </Typography>
+                    </Divider>
+                  </Grid>
+                ) : null}
 
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField
-                  fullWidth
-                  name="currentPassword"
-                  type="password"
-                  label="Current Password"
-                  value={accountData.currentPassword}
-                  onChange={handleAccountChange}
-                  slotProps={{
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock fontSize="small" />
-                        </InputAdornment>
-                      ),
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField
-                  fullWidth
-                  name="newPassword"
-                  type="password"
-                  label="New Password"
-                  value={accountData.newPassword}
-                  onChange={handleAccountChange}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 4 }}>
-                <TextField
-                  fullWidth
-                  name="confirmPassword"
-                  type="password"
-                  label="Confirm New Password"
-                  value={accountData.confirmPassword}
-                  onChange={handleAccountChange}
-                  error={
-                    accountData.newPassword.length > 0 &&
-                    accountData.newPassword !== accountData.confirmPassword
-                  }
-                  helperText={
-                    accountData.newPassword.length > 0 &&
-                    accountData.newPassword !== accountData.confirmPassword
-                      ? "Passwords don't match"
-                      : " "
-                  }
-                />
-              </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    name="currentPassword"
+                    type="password"
+                    label="Current Password"
+                    value={accountData.currentPassword}
+                    onChange={handleAccountChange}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock fontSize="small" />
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    name="newPassword"
+                    type="password"
+                    label="New Password"
+                    value={accountData.newPassword}
+                    onChange={handleAccountChange}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock fontSize="small" />
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <TextField
+                    fullWidth
+                    name="confirmPassword"
+                    type="password"
+                    label="Confirm New Password"
+                    value={accountData.confirmPassword}
+                    onChange={handleAccountChange}
+                    slotProps={{
+                      input: {
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock fontSize="small" />
+                          </InputAdornment>
+                        ),
+                      },
+                    }}
+                    error={
+                      accountData.newPassword.length > 0 &&
+                      accountData.newPassword !== accountData.confirmPassword
+                    }
+                    helperText={
+                      accountData.newPassword.length > 0 &&
+                      accountData.newPassword !== accountData.confirmPassword
+                        ? "Passwords don't match"
+                        : " "
+                    }
+                  />
+                </Grid>
 
-              <Grid size={{ xs: 12 }}>
-                <Collapse in={!!accountError}>
-                  <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
-                    {accountError}
-                  </Alert>
-                </Collapse>
-                <Collapse in={!!accountSuccess}>
-                  <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }}>
-                    {accountSuccess}
-                  </Alert>
-                </Collapse>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    mb: 3,
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    disabled={!isAccountValid || savingAccount}
-                    onClick={handleAccountSubmit}
+                <Grid size={{ xs: 12 }}>
+                  <Collapse in={!!accountError}>
+                    <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+                      {accountError}
+                    </Alert>
+                  </Collapse>
+                  <Collapse in={!!accountSuccess}>
+                    <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }}>
+                      {accountSuccess}
+                    </Alert>
+                  </Collapse>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "center", mb: 3 }}
                   >
-                    {savingAccount ? (
-                      <CircularProgress size={22} color="inherit" />
-                    ) : (
-                      "Save Account Changes"
-                    )}
-                  </Button>
-                </Box>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={!isAccountValid || savingAccount}
+                    >
+                      {savingAccount ? (
+                        <CircularProgress size={22} color="inherit" />
+                      ) : (
+                        "Save Account Changes"
+                      )}
+                    </Button>
+                  </Box>
+                </Grid>
               </Grid>
-            </Grid>
+            </form>
           </DashboardCard>
         </Grid>
       </Grid>

@@ -79,7 +79,6 @@ const Hero: React.FC = () => {
                   fontSize: {
                     xs: "2rem",
                     sm: "3rem",
-                    md: "3rem",
                     lg: "3.5rem",
                   },
                   lineHeight: 1.1,
@@ -102,7 +101,7 @@ const Hero: React.FC = () => {
               <Typography
                 variant="subtitle1"
                 sx={{
-                  fontSize: { xs: "1rem", md: "1.2rem" },
+                  fontSize: { xs: "1rem", sm: "1rem", md: "1.2rem" },
                   color: "text.secondary",
                   mb: 3,
                   maxWidth: "500px",
@@ -204,7 +203,7 @@ const Hero: React.FC = () => {
                     },
 
                     "&:hover .hero-shine": {
-                      transform: "translateX(322%)",
+                      transform: "translateX(850%)",
                     },
                   }}
                 >
@@ -236,20 +235,22 @@ const Hero: React.FC = () => {
                     sx={{
                       position: "absolute",
                       top: 0,
-                      left: "-45%",
-                      width: "45%",
+                      left: "-30%",
+                      width: "20%",
                       height: "100%",
 
                       background:
-                        "linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0.06) 75%, transparent 100%)",
+                        "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.08) 35%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.08) 65%, transparent 100%)",
 
                       transform: "translateX(0)",
                       transition:
-                        "transform 0.85s cubic-bezier(0.22, 1, 0.36, 1)",
+                        "transform 0.9s cubic-bezier(0.22, 1, 0.36, 1)",
 
                       pointerEvents: "none",
                       zIndex: 2,
                       willChange: "transform",
+                      filter: "blur(3px)",
+                      opacity: 0.4,
                     }}
                   />
 
