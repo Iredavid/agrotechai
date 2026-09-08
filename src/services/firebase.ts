@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { browserLocalPersistence, initializeAuth } from "firebase/auth";
 
 // Replace this config object with yours from the Firebase Console
 const firebaseConfig = {
@@ -17,5 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Export services for use in components
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const auth = initializeAuth(app, {
+  persistence: browserLocalPersistence,
+});

@@ -19,8 +19,6 @@ import Grass from "@mui/icons-material/Grass";
 import Landscape from "@mui/icons-material/Landscape";
 import TrendingUp from "@mui/icons-material/TrendingUp";
 import { useAuth } from "../../context/AuthContext";
-import autoTable from "jspdf-autotable";
-import jsPDF from "jspdf";
 
 const FertilizerAdvisor: React.FC = () => {
   const farmProfile = useAuth().userProfile;
@@ -44,11 +42,12 @@ const FertilizerAdvisor: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<any>(null);
 
-    // Builds a report that shows its work: every input that went into the
-  // calculation, the resulting numbers, and the method notes -- so it can
-  // be independently checked rather than just trusted.
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     if (!result) return;
+    const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+      import("jspdf"),
+      import("jspdf-autotable"),
+    ]);
 
     const doc = new jsPDF();
     const generatedAt = new Date().toLocaleString();
@@ -76,7 +75,11 @@ const FertilizerAdvisor: React.FC = () => {
       head: [["Input", "Value", "Source"]],
       body: [
         ["Crop", result.crop, "Selected by user"],
-        ["Target yield", `${result.target_yield_t_ha} t/ha`, "Selected by user"],
+        [
+          "Target yield",
+          `${result.target_yield_t_ha} t/ha`,
+          "Selected by user",
+        ],
         ["Farm area", `${result.farm_size_ha} ha`, "Farm profile"],
         [
           "Soil P (extractable)",
@@ -90,7 +93,9 @@ const FertilizerAdvisor: React.FC = () => {
         ],
         [
           "Soil pH",
-          result.soil_context.ph !== null ? result.soil_context.ph.toFixed(1) : "-",
+          result.soil_context.ph !== null
+            ? result.soil_context.ph.toFixed(1)
+            : "-",
           "ISRIC SoilGrids, live",
         ],
       ],
@@ -201,16 +206,19 @@ const FertilizerAdvisor: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/recommendation`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          crop,
-          target_yield_t_ha: Number(targetYield),
-          farm_size_ha: Number(farmArea),
-          features: farmProfile.features_used,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/recommendation`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            crop,
+            target_yield_t_ha: Number(targetYield),
+            farm_size_ha: Number(farmArea),
+            features: farmProfile.features_used,
+          }),
+        },
+      );
       if (!response.ok) {
         const body = await response.json().catch(() => null);
         throw new Error(body?.detail ?? "Could not calculate recommendation.");

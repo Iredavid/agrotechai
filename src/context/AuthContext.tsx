@@ -19,6 +19,7 @@ type AuthContextType = {
   profileLoading: boolean;
   profileError: Error | null;
   refreshProfile: () => Promise<void>;
+  enableProfileFetch: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +27,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // The farm-profile fetch (getUserData -> Earth Engine soil lookups,
+  // backend calls, etc.) is expensive and has nothing to do with public
+  // pages like the landing page or /login. Previously this query was
+  // enabled purely by `!!user`, which meant a returning visitor with a
+  // valid Firebase session paid for the full profile fetch just landing
+  // on '/' -- Lighthouse measured this at ~5.4s on the landing page.
+  // Now it stays off until something inside the actual authenticated app
+  // (AppLayout) explicitly opts in via enableProfileFetch().
+  const [profileFetchEnabled, setProfileFetchEnabled] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -35,8 +46,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
 
       if (!currentUser) {
-        // Clear all profile caches on logout
+        // Clear all profile caches on logout, and require the next
+        // session to opt back in via enableProfileFetch() rather than
+        // inheriting the previous session's "already enabled" state.
         queryClient.removeQueries({ queryKey: ["user-profile"] });
+        setProfileFetchEnabled(false);
         return;
       }
 
@@ -52,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const profileQuery = useQuery({
     queryKey: ["user-profile", user?.uid],
     queryFn: () => getUserData(user!.uid),
-    enabled: !!user,
+    enabled: !!user && profileFetchEnabled,
 
     // Always treat auth profile as stale
     staleTime: 0,
@@ -77,6 +91,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  // Called by AppLayout (or anything else that genuinely needs profile
+  // data) on mount. React Query automatically fires a fetch the moment a
+  // query transitions from disabled to enabled -- no separate manual
+  // fetch call needed here.
+  const enableProfileFetch = () => setProfileFetchEnabled(true);
+
   const value = useMemo(
     () => ({
       userData: user,
@@ -85,6 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       profileLoading: profileQuery.isFetching,
       profileError: (profileQuery.error as Error) ?? null,
       refreshProfile,
+      enableProfileFetch,
     }),
     [
       user,

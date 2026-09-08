@@ -1,21 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
     <title>AgroTech AI</title>
-    <meta name="description" content="AgroTech AI — built on Replit. Update this description to reflect the app." />
+    <meta
+      name="description"
+      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+    />
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="AgroTech AI" />
-    <meta property="og:description" content="AgroTech AI — built on Replit. Update this description to reflect the app." />
+    <meta
+      property="og:description"
+      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+    />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="AgroTech AI" />
-    <meta name="twitter:description" content="AgroTech AI — built on Replit. Update this description to reflect the app." />
+    <meta
+      name="twitter:description"
+      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Preload the LCP element (Hero.tsx's hero-photo). This is a
+         client-rendered SPA, so without this the browser has no idea
+         this image exists until the JS bundle downloads AND executes
+         AND React mounts -- this lets it start the fetch straight from
+         the raw HTML, in parallel with everything else. srcset/sizes
+         here must match the <img>'s srcset/sizes exactly, or the
+         browser preloads a different variant than the one actually
+         used and you pay for two downloads instead of one. -->
+    <link
+      rel="preload"
+      as="image"
+      imagesrcset="
+        https://res.cloudinary.com/ffkfh5xr/image/upload/f_auto,q_auto,c_limit,w_400/v1786130689/agricHero_rzf5cm.avif 400w,
+        https://res.cloudinary.com/ffkfh5xr/image/upload/f_auto,q_auto,c_limit,w_600/v1786130689/agricHero_rzf5cm.avif 600w,
+        https://res.cloudinary.com/ffkfh5xr/image/upload/f_auto,q_auto,c_limit,w_768/v1786130689/agricHero_rzf5cm.avif 768w
+      "
+      imagesizes="(max-width: 600px) 90vw, 500px"
+      fetchpriority="high"
+    />
   </head>
   <body>
     <div id="root"></div>

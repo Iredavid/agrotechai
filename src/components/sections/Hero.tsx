@@ -3,6 +3,20 @@ import { Box, Button, Container, Typography, Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link as RouterLink } from "react-router-dom";
 import ArrowForward from "@mui/icons-material/ArrowForward";
+
+// Must match the imagesrcset/imagesizes in index.html's <link rel="preload">
+// exactly -- if these ever drift apart, the browser preloads one variant
+// and this <img> requests a different one, so you pay for two downloads
+// instead of the one the preload was meant to save.
+const HERO_IMAGE_BASE =
+  "https://res.cloudinary.com/ffkfh5xr/image/upload/f_auto,q_auto,c_limit";
+const HERO_IMAGE_PATH = "v1786130689/agricHero_rzf5cm.avif";
+const HERO_IMAGE_SRCSET = [400, 600, 768]
+  .map((w) => `${HERO_IMAGE_BASE},w_${w}/${HERO_IMAGE_PATH} ${w}w`)
+  .join(", ");
+const HERO_IMAGE_SIZES = "(max-width: 600px) 90vw, 500px";
+const HERO_IMAGE_FALLBACK_SRC = `${HERO_IMAGE_BASE},w_768/${HERO_IMAGE_PATH}`;
+
 const Hero: React.FC = () => {
   return (
     <Box
@@ -207,13 +221,23 @@ const Hero: React.FC = () => {
                     },
                   }}
                 >
-                  {/* Farmer photo */}
+                  {/* Farmer photo.
+                      srcSet/sizes matched to index.html's preload link --
+                      this is what stops mobile viewports downloading the
+                      full 768px original for a ~340px box (Lighthouse
+                      measured 69KB of pure waste from that mismatch).
+                      fetchPriority="high" tells the browser to treat this
+                      as urgent the moment it's discovered, since it's the
+                      page's LCP element. */}
                   <Box
                     component="img"
                     className="hero-photo"
-                    src="https://res.cloudinary.com/ffkfh5xr/image/upload/f_auto,q_auto/v1786130689/agricHero_rzf5cm.avif"
+                    src={HERO_IMAGE_FALLBACK_SRC}
+                    srcSet={HERO_IMAGE_SRCSET}
+                    sizes={HERO_IMAGE_SIZES}
                     alt="Nigerian farmer using AgroTech AI in the field"
                     loading="eager"
+                    fetchPriority="high"
                     sx={{
                       width: "100%",
                       height: "100%",
