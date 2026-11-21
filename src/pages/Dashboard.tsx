@@ -28,8 +28,8 @@ const Dashboard: React.FC<any> = () => {
   const [weather, setWeather] = useState<any>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const { userData, userProfile } = useAuth();
-  console.log(userData?.uid);
-  console.log(userData, userProfile);
+  // console.log(userData?.uid);
+  // console.log(userData, userProfile);
 
   useEffect(() => {
     async function loadWeather() {
