@@ -11,7 +11,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { auth } from "../services/firebase";
 import { getUserData } from "../services/dashboard";
-import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   userData: User | null;
