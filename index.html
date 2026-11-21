@@ -2,45 +2,91 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+      content="width=device-width, initial-scale=1.0"
     />
-    <title>AgroTech AI</title>
+
+    <title>
+      AgroTech AI | Smart Farming, AI-Powered Insights & Agricultural Solutions
+    </title>
+
+    <!-- SEO Description -->
     <meta
       name="description"
-      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+      content="Transform your farming experience with AgroTech AI. Get intelligent crop recommendations, soil insights, weather information, and data-driven agricultural guidance to improve productivity and make smarter farming decisions."
     />
+
+    <meta
+      name="keywords"
+      content="AgroTech AI, smart farming, artificial intelligence in agriculture, precision agriculture, crop recommendation, soil analysis, agricultural technology, farm management, Nigerian agriculture"
+    />
+
+    <meta name="author" content="AgroTech AI" />
     <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="AgroTech AI" />
+    <meta name="theme-color" content="#2E7D32" />
+
+    <!-- Open Graph / WhatsApp / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AgroTech AI" />
+
+    <meta
+      property="og:title"
+      content="AgroTech AI | Smarter Farming Starts Here"
+    />
+
     <meta
       property="og:description"
-      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+      content="Discover smarter ways to farm with AgroTech AI. Access AI-powered agricultural insights, crop recommendations, soil intelligence, and tools designed to help farmers make better decisions and improve productivity."
     />
-    <meta property="og:type" content="website" />
+
+    <meta property="og:url" content="https://YOUR-DOMAIN.com/" />
+
+    <meta
+      property="og:image"
+      content="https://YOUR-DOMAIN.com/og-image.png"
+    />
+
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta
+      property="og:image:alt"
+      content="AgroTech AI - Smart Agricultural Technology"
+    />
+
+    <!-- Twitter / X Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AgroTech AI" />
+
+    <meta
+      name="twitter:title"
+      content="AgroTech AI | Smarter Farming Starts Here"
+    />
+
     <meta
       name="twitter:description"
-      content="AgroTech AI — built on Replit. Update this description to reflect the app."
+      content="Empowering farmers with AI-driven agricultural insights, crop recommendations, and smarter farming solutions."
     />
+
+    <meta
+      name="twitter:image"
+      content="https://YOUR-DOMAIN.com/og-image.png"
+    />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Preload the LCP element (Hero.tsx's hero-photo). This is a
-         client-rendered SPA, so without this the browser has no idea
-         this image exists until the JS bundle downloads AND executes
-         AND React mounts -- this lets it start the fetch straight from
-         the raw HTML, in parallel with everything else. srcset/sizes
-         here must match the <img>'s srcset/sizes exactly, or the
-         browser preloads a different variant than the one actually
-         used and you pay for two downloads instead of one. -->
+    <!-- Preload Hero Image -->
     <link
       rel="preload"
       as="image"
@@ -53,8 +99,10 @@
       fetchpriority="high"
     />
   </head>
+
   <body>
     <div id="root"></div>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

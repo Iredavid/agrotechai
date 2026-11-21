@@ -107,7 +107,7 @@ const FarmerOnboarding: React.FC = () => {
     });
   };
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const { userData, userProfile } = useAuth();
+  const { userData, userProfile, refreshProfile } = useAuth();
 
   const [locating, setLocating] = useState(false);
   const [location, setLocation] = useState<{
@@ -275,7 +275,9 @@ const FarmerOnboarding: React.FC = () => {
       });
       if (!res.ok)
         throw new Error("Couldn't save your farm profile. Please try again.");
-      navigate("/dashboard");
+      await refreshProfile(); 
+
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       setSubmitError(
         err instanceof Error ? err.message : "Something went wrong.",

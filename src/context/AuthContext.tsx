@@ -6,11 +6,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { auth } from "../services/firebase";
 import { getUserData } from "../services/dashboard";
+import { useNavigate } from "react-router-dom";
 
 type AuthContextType = {
   userData: User | null;
@@ -20,14 +21,14 @@ type AuthContextType = {
   profileError: Error | null;
   refreshProfile: () => Promise<void>;
   enableProfileFetch: () => void;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  
   // The farm-profile fetch (getUserData -> Earth Engine soil lookups,
   // backend calls, etc.) is expensive and has nothing to do with public
   // pages like the landing page or /login. Previously this query was
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Now it stays off until something inside the actual authenticated app
   // (AppLayout) explicitly opts in via enableProfileFetch().
   const [profileFetchEnabled, setProfileFetchEnabled] = useState(false);
-
+  
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -82,6 +83,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     retry: 1,
   });
+ const logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   const refreshProfile = async () => {
     if (!user) return;
@@ -106,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       profileError: (profileQuery.error as Error) ?? null,
       refreshProfile,
       enableProfileFetch,
+      logout,
     }),
     [
       user,

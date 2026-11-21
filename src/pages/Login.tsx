@@ -66,8 +66,7 @@ const Login: React.FC = () => {
     } catch (error: any) {
       // console.log("CAUGHT ERROR:", error); // add this
       // console.error("Registration failed:", error);
-      const errorMessage = error.message;
-      setError(mapFirebaseAccountError(errorMessage));
+      setError(mapFirebaseAccountError(error.code));
     } finally {
       setloading(false);
     }

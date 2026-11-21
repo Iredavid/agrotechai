@@ -239,7 +239,7 @@ const FertilizerAdvisor: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
           Fertilizer Advisor
         </Typography>
         <Typography variant="body1" color="text.secondary">

@@ -19,7 +19,7 @@ import Warning from "@mui/icons-material/Warning";
 import SmartToy from "@mui/icons-material/SmartToy";
 import { mockTasks, recentActivity } from "../utils/mockData";
 import { motion } from "framer-motion";
-import { Link as RouterLink } from "react-router-dom";
+import { Link, Link as RouterLink } from "react-router-dom";
 import { getWeather } from "../services/dashboard";
 import { useAuth } from "../context/AuthContext";
 
@@ -36,7 +36,7 @@ const Dashboard: React.FC<any> = () => {
       try {
         setWeatherLoading(true);
         const data = await getWeather(userProfile.lat, userProfile.lon);
-        console.log("Weather data:", data);
+        // console.log("Weather data:", data);
         setWeather(data);
       } catch (error) {
         console.error("Unable to load weather data:", error);
@@ -108,6 +108,8 @@ const Dashboard: React.FC<any> = () => {
           variant="contained"
           color="primary"
           className="self-start md:self-center"
+          component={Link}
+          to="/ai-assistant"
         >
           {/* Icon on xs/sm screens */}
           <SmartToy sx={{ display: { xs: "block", lg: "none" } }} />

@@ -15,14 +15,14 @@ import Dashboard from "@mui/icons-material/Dashboard";
 import CloudQueue from "@mui/icons-material/CloudQueue";
 import BugReport from "@mui/icons-material/BugReport";
 import WaterDrop from "@mui/icons-material/WaterDrop";
-import TrendingUp from "@mui/icons-material/TrendingUp";
+// import TrendingUp from "@mui/icons-material/TrendingUp";
 import EventNote from "@mui/icons-material/EventNote";
-import Storefront from "@mui/icons-material/Storefront";
-import Description from "@mui/icons-material/Description";
-import Notifications from "@mui/icons-material/Notifications";
+// import Storefront from "@mui/icons-material/Storefront";
+// import Description from "@mui/icons-material/Description";
+// import Notifications from "@mui/icons-material/Notifications";
 import SmartToy from "@mui/icons-material/SmartToy";
 import Person from "@mui/icons-material/Person";
-import Settings from "@mui/icons-material/Settings";
+// import Settings from "@mui/icons-material/Settings";
 import Grass from "@mui/icons-material/Grass";
 
 const drawerWidth = 280;
@@ -60,20 +60,20 @@ const navGroups = [
         name: "Pest Advisor",
         path: "/recommendations/pest",
         icon: <BugReport />,
-        disabled: true, // Disabled for now, can be enabled later
+        // disabled: true, // Disabled for now, can be enabled later
       },
-      {
-        name: "Yield Prediction",
-        path: "/yield-prediction",
-        icon: <TrendingUp />,
-        disabled: true, // Disabled for now, can be enabled later
-      },
-      {
-        name: "Market Advisory",
-        path: "/market-advisory",
-        icon: <Storefront />,
-        disabled: true, // Disabled for now, can be enabled later
-      },
+      // {
+      //   name: "Yield Prediction",
+      //   path: "/yield-prediction",
+      //   icon: <TrendingUp />,
+      //   // disabled: true, // Disabled for now, can be enabled later
+      // },
+      // {
+      //   name: "Market Advisory",
+      //   path: "/market-advisory",
+      //   icon: <Storefront />,
+      //   disabled: true, // Disabled for now, can be enabled later
+      // },
     ],
   },
   {
@@ -83,38 +83,38 @@ const navGroups = [
         name: "Farm Planner",
         path: "/farm-planner",
         icon: <EventNote />,
-        disabled: true,
+        // disabled: true,
       },
-      {
-        name: "Farm Records",
-        path: "/records",
-        icon: <Description />,
-        disabled: true,
-      },
+      // {
+      //   name: "Farm Records",
+      //   path: "/records",
+      //   icon: <Description />,
+      //   // disabled: true,
+      // },
       {
         name: "AI Assistant",
         path: "/ai-assistant",
         icon: <SmartToy />,
-        disabled: true,
+        // disabled: true,
       },
     ],
   },
   {
     title: "Settings",
     items: [
-      {
-        name: "Notifications",
-        path: "/notifications",
-        icon: <Notifications />,
-        disabled: true,
-      },
+      // {
+      //   name: "Notifications",
+      //   path: "/notifications",
+      //   icon: <Notifications />,
+      //   disabled: true,
+      // },
       { name: "Profile", path: "/profile", icon: <Person /> },
-      {
-        name: "Settings",
-        path: "/settings",
-        icon: <Settings />,
-        disabled: true,
-      },
+      // {
+      //   name: "Settings",
+      //   path: "/settings",
+      //   icon: <Settings />,
+      //   disabled: true,
+      // },
     ],
   },
 ];
@@ -190,7 +190,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 return (
                   <ListItem key={item.name} disablePadding sx={{ mb: 0.5 }}>
                     <ListItemButton
-                      disabled={item.disabled}
+                      // disabled={item.disabled}
                       component={RouterLink}
                       to={item.path}
                       onClick={() => {

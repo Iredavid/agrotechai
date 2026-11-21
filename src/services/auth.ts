@@ -53,20 +53,35 @@ export async function updateUser(fullName: string, userId: string) {
 
 export function mapFirebaseAccountError(code?: string): string {
   switch (code) {
+    case "auth/user-not-found":
+      return "No account found with this email address.";
+
     case "auth/wrong-password":
     case "auth/invalid-credential":
-      return "Current password is incorrect.";
-    case "auth/requires-recent-login":
-      return "For security, please re-enter your current password and try again.";
-    case "auth/email-already-in-use":
-      return "That email address is already in use by another account.";
+      return "Incorrect email or password.";
+
     case "auth/invalid-email":
       return "Please enter a valid email address.";
-    case "auth/weak-password":
-      return "New password is too weak -- use at least 6 characters.";
+
+    case "auth/user-disabled":
+      return "This account has been disabled. Please contact support.";
+
     case "auth/too-many-requests":
-      return "Too many attempts. Please wait a moment and try again.";
+      return "Too many failed attempts. Please try again later.";
+
+    case "auth/email-already-in-use":
+      return "This email address is already registered.";
+
+    case "auth/weak-password":
+      return "Password is too weak. Use at least 6 characters.";
+
+    case "auth/network-request-failed":
+      return "Network error. Please check your internet connection.";
+
+    case "auth/requires-recent-login":
+      return "Please sign in again to perform this operation.";
+
     default:
-      return "Something went wrong updating your account. Please try again.";
+      return "Unable to sign in. Please check your credentials and try again.";
   }
 }

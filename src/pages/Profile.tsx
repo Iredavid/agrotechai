@@ -12,7 +12,8 @@ import {
   CircularProgress,
   Divider,
 } from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
+import Logout from "@mui/icons-material/Logout";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import Person from "@mui/icons-material/Person";
 import Email from "@mui/icons-material/Email";
 import Lock from "@mui/icons-material/Lock";
@@ -45,6 +46,7 @@ interface FarmFormData {
 }
 
 const Profile: React.FC = () => {
+  const navigate = useNavigate();
   // const SOIL_TYPE_OPTIONS = await getData("soil");
   const { data, isLoading } = useQuery({
     queryKey: ["onboarding-options"],
@@ -65,7 +67,7 @@ const Profile: React.FC = () => {
   // const queryClient = useQueryClient();
   const soilOptions = useMemo(() => data?.soil ?? [], [data]);
   // const API_BASE = import.meta.env.VITE_API_BASE_URL;
-  const { userData, userProfile, refreshProfile } = useAuth();
+  const { userData, userProfile, refreshProfile, logout } = useAuth();
 
   const [accountData, setAccountData] = useState<AccountFormData>({
     fullName: userData?.displayName ?? "",
@@ -177,9 +179,34 @@ const Profile: React.FC = () => {
 
   return (
     <Box sx={{ maxWidth: "lg", mx: "auto" }}>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 4 }}>
-        Farmer Profile
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 700 }}>
+          Farmer Profile
+        </Typography>
+
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<Logout />}
+          onClick={async () => {
+            await logout();
+            navigate("/login");
+          }}
+          sx={{
+            borderRadius: 2,
+            py: 1,
+          }}
+        >
+          Logout
+        </Button>
+      </Box>
 
       <Grid container spacing={3}>
         {/* Left Column */}
@@ -347,6 +374,16 @@ const Profile: React.FC = () => {
                         ),
                       },
                     }}
+                    error={
+                      accountData.newPassword.length > 0 &&
+                      accountData.newPassword.length < 8
+                    }
+                    helperText={
+                      accountData.newPassword.length > 0 &&
+                      accountData.newPassword.length < 8
+                        ? "Password must be at least 8 characters"
+                        : " "
+                    }
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
