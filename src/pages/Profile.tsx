@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
         await updateProfile(userData, {
           displayName: accountData.fullName,
         });
-        await updateUser(accountData.fullName, userData.uid);
+        // await updateUser(accountData.fullName, userData.uid);
       }
 
       let emailChangeRequested = false;

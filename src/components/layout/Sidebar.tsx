@@ -56,12 +56,12 @@ const navGroups = [
         icon: <WaterDrop />,
         // disabled: true, // Disabled for now, can be enabled later
       },
-      {
-        name: "Pest Advisor",
-        path: "/recommendations/pest",
-        icon: <BugReport />,
-        // disabled: true, // Disabled for now, can be enabled later
-      },
+      // {
+      //   name: "Pest Advisor",
+      //   path: "/recommendations/pest",
+      //   icon: <BugReport />,
+      //   // disabled: true, // Disabled for now, can be enabled later
+      // },
       // {
       //   name: "Yield Prediction",
       //   path: "/yield-prediction",

@@ -156,7 +156,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ toggleTheme, mode }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          width: { md: `calc(100% - 260px)` },
+          minWidth: 0,
+          width: { xs: "100%", md: "calc(100% - 280px)" },
           display: "flex",
           flexDirection: "column",
           minHeight: "100vh",
@@ -167,7 +168,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ toggleTheme, mode }) => {
           toggleTheme={toggleTheme}
           mode={mode}
         />
-        <Box sx={{ flexGrow: 1, p: { xs: 2, md: 4 }, overflow: "auto" }}>
+        <Box sx={{ flexGrow: 1, p: { xs: 2, md: 4 }, minWidth: 0, }}>
           {userProfile ? <Outlet /> : null}
         </Box>
       </Box>

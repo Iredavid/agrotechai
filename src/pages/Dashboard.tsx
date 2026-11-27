@@ -29,7 +29,7 @@ const Dashboard: React.FC<any> = () => {
   const [weatherLoading, setWeatherLoading] = useState(true);
   const { userData, userProfile } = useAuth();
   // console.log(userData?.uid);
-  // console.log(userData, userProfile);
+  console.log(userData, userProfile);
 
   useEffect(() => {
     async function loadWeather() {
@@ -119,54 +119,6 @@ const Dashboard: React.FC<any> = () => {
             Ask AI Assistant
           </Box>
         </Button>
-        {/* <button
-          onClick={() => {
-            navigator.geolocation.getCurrentPosition(
-              async (position) => {
-                const longitude = position.coords.longitude;
-                const latitude = position.coords.latitude;
-                // console.log(position.coords.latitude);
-                // console.log(position.coords.longitude);
-                function getGeographicalDirection(
-                  latitude: number,
-                  longitude: number,
-                ) {
-                  const latitudeDirection = latitude >= 0 ? "North" : "South";
-                  const longitudeDirection = longitude >= 0 ? "East" : "West";
-
-                  return `${latitudeDirection}, ${longitudeDirection}`;
-                }
-
-                console.log(getGeographicalDirection(latitude, longitude));
-                // North, East
-
-                const response = await fetch(
-                  "http://127.0.0.1:8000/crop-recommendation",
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      lat: latitude,
-                      lon: longitude,
-                      farm_size_ha: 5,
-                      soil_texture: "loam",
-                    }),
-                  },
-                );
-                const data = await response.json();
-                console.log(data);
-                // setWeather(data);
-              },
-              (error) => {
-                console.error(error);
-              },
-            );
-          }}
-        >
-          📍
-        </button> */}
       </Box>
 
       <Grid container spacing={3}>

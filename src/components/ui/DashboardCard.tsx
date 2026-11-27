@@ -10,7 +10,7 @@ interface DashboardCardProps {
 
 const DashboardCard: React.FC<DashboardCardProps> = ({ title, action, children, noPadding = false }) => {
   return (
-    <Card sx={{ minWidth: 0, height: 'fit', display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ minWidth: 0, height: 'auto', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{minWidth: 0, p: 3, pb: noPadding ? 0 : 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: "100%", }}>
         <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1.125rem' }}>
           {title}

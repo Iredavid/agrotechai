@@ -17,8 +17,8 @@ const faqs = [
     answer: "We use a combination of satellite imagery, local weather stations, and AI modeling to provide hyper-local forecasts that are significantly more accurate for your specific farm location than general weather apps."
   },
   {
-    question: "How does the AI pest detection work?",
-    answer: "Simply take a clear photo of the affected plant using your smartphone. Our computer vision model, trained on thousands of crop diseases specific to West Africa, will identify the issue and suggest treatments."
+    question: "How does the fertilizer advisor work?",
+    answer: "The fertilizer advisor analyzes your soil data and crop requirements to provide optimal fertilizer recommendations."
   },
   {
     question: "Is my farm data secure?",

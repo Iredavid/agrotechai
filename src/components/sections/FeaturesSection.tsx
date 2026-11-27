@@ -8,6 +8,7 @@ import  BugReport  from '@mui/icons-material/BugReport';
 import  TrendingUp  from '@mui/icons-material/TrendingUp';
 import  EventNote  from '@mui/icons-material/EventNote';
 import  SmartToy  from '@mui/icons-material/SmartToy';
+import WaterDrop from "@mui/icons-material/WaterDrop";
 
 
 const features = [
@@ -24,10 +25,10 @@ const features = [
     icon: <CloudQueue />,
   },
   {
-    title: "Pest Detection",
+    title: "Fertilizer Advisor",
     description:
-      "Early warning systems and identification tools for pests and diseases, protecting your yield before damage occurs.",
-    icon: <BugReport />,
+      "Optimal fertilizer recommendations based on soil analysis and crop requirements.",
+    icon: <WaterDrop />,
   },
   {
     title: "Yield Prediction",
