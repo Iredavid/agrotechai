@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
   Grid,
   Typography,
@@ -17,11 +18,28 @@ import LocalFlorist from "@mui/icons-material/LocalFlorist";
 import TrendingUp from "@mui/icons-material/TrendingUp";
 import Warning from "@mui/icons-material/Warning";
 import SmartToy from "@mui/icons-material/SmartToy";
-import { mockTasks, recentActivity } from "../utils/mockData";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 import { motion } from "framer-motion";
 import { Link, Link as RouterLink } from "react-router-dom";
-import { getWeather } from "../services/dashboard";
+import { formatLabel, getWeather } from "../services/dashboard";
+import { getOverview, timeAgo, type Overview } from "../services/planner";
 import { useAuth } from "../context/AuthContext";
+
+/** "Today", "Tomorrow", "Yesterday", otherwise e.g. "Mon, 12 May". */
+const friendlyDate = (iso: string): string => {
+  const target = new Date(`${iso}T00:00:00`);
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const days = Math.round((target.getTime() - start.getTime()) / 86400000);
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  if (days === -1) return "Yesterday";
+  return target.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+};
 
 const Dashboard: React.FC<any> = () => {
   const theme = useTheme();
@@ -30,6 +48,15 @@ const Dashboard: React.FC<any> = () => {
   const { userData, userProfile } = useAuth();
   // console.log(userData?.uid);
   console.log(userData, userProfile);
+
+  // Next tasks, insights and recent activity come from ONE request to the
+  // backend (no AI call there, so it is cheap to run on every dashboard load).
+  const [overview, setOverview] = useState<Overview | null>(null);
+  const [overviewLoading, setOverviewLoading] = useState(true);
+  const [overviewError, setOverviewError] = useState<string | null>(null);
+
+  const firstName =
+    (userData?.displayName ?? "").trim().split(/\s+/)[0] || "farmer";
 
   useEffect(() => {
     async function loadWeather() {
@@ -46,6 +73,35 @@ const Dashboard: React.FC<any> = () => {
     }
     loadWeather();
   }, []);
+
+  useEffect(() => {
+    if (!userProfile) return;
+    let cancelled = false;
+    setOverviewLoading(true);
+    setOverviewError(null);
+    getOverview({
+      lat: userProfile.lat,
+      lon: userProfile.lon,
+      top_crop: userProfile.recommendations?.[0]?.crop,
+      irrigation_type: userProfile.irrigation_type_used,
+      features: userProfile.features_used,
+      farm_health_score: userProfile.farm_health_score,
+      soil_moisture: userProfile.soil_moisture,
+    })
+      .then((data) => {
+        if (!cancelled) setOverview(data);
+      })
+      .catch((e: Error) => {
+        if (!cancelled) setOverviewError(e.message);
+      })
+      .finally(() => {
+        if (!cancelled) setOverviewLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [userProfile?.lat, userProfile?.lon]);
+
   type HealthStatusColor = "primary" | "warning" | "error";
 
   const getHealthStatus = (
@@ -86,6 +142,20 @@ const Dashboard: React.FC<any> = () => {
     };
   };
 
+  const insightStyle = (level: "warning" | "info" | "success") =>
+    level === "warning"
+      ? { bg: "warning.light", fg: "warning.contrastText" }
+      : level === "success"
+        ? { bg: "primary.light", fg: "primary.contrastText" }
+        : { bg: "info.light", fg: "info.contrastText" };
+
+  const taskChip = (status: "overdue" | "due_today" | "upcoming") =>
+    status === "overdue"
+      ? { label: "Overdue", color: "error" as const }
+      : status === "due_today"
+        ? { label: "Due now", color: "primary" as const }
+        : { label: "Upcoming", color: "default" as const };
+
   return (
     <Box>
       <Box
@@ -101,7 +171,7 @@ const Dashboard: React.FC<any> = () => {
             Overview
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Welcome back, John. Here's what's happening on your farm.
+            Welcome back, {firstName}. Here's what's happening on your farm.
           </Typography>
         </Box>
         <Button
@@ -411,49 +481,75 @@ const Dashboard: React.FC<any> = () => {
           >
             <DashboardCard
               title="AI Insights"
-              action={<Button size="small">View All</Button>}
+              action={
+                <Button component={RouterLink} to="/farm-planner" size="small">
+                  View All
+                </Button>
+              }
             >
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <Box
-                  sx={{
-                    p: 2,
-                    bgcolor: "warning.light",
-                    color: "warning.contrastText",
-                    borderRadius: "12px",
-                    display: "flex",
-                    gap: 1.5,
-                  }}
-                >
-                  <Warning />
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      Heavy Rain Expected
+                {overviewLoading && (
+                  <>
+                    <Skeleton variant="rounded" height={72} />
+                    <Skeleton variant="rounded" height={72} />
+                  </>
+                )}
+
+                {!overviewLoading && overviewError && (
+                  <Alert severity="warning">
+                    Could not load insights right now.
+                  </Alert>
+                )}
+
+                {!overviewLoading &&
+                  !overviewError &&
+                  overview?.insights.length === 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                      No alerts right now. Create a plan in the Farm Planner to
+                      get advice tailored to your crop and weather.
                     </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                      Delay fertilizer application on Plot B for 48 hours.
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    p: 2,
-                    bgcolor: "primary.light",
-                    color: "primary.contrastText",
-                    borderRadius: "12px",
-                    display: "flex",
-                    gap: 1.5,
-                  }}
-                >
-                  <LocalFlorist />
-                  <Box>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                      Optimal Planting Window
-                    </Typography>
-                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                      Soil moisture is ideal for Maize planting this week.
-                    </Typography>
-                  </Box>
-                </Box>
+                  )}
+
+                {!overviewLoading &&
+                  overview?.insights.map((insight) => {
+                    const { bg, fg } = insightStyle(insight.level);
+                    return (
+                      <Box
+                        key={insight.id}
+                        sx={{
+                          p: 2,
+                          bgcolor: bg,
+                          color: fg,
+                          borderRadius: "12px",
+                          display: "flex",
+                          gap: 1.5,
+                        }}
+                      >
+                        {insight.type === "weather" ? (
+                          insight.level === "warning" ? (
+                            <Warning />
+                          ) : (
+                            <Cloud />
+                          )
+                        ) : insight.type === "planting" ? (
+                          <LocalFlorist />
+                        ) : (
+                          <TrendingUp />
+                        )}
+                        <Box>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 700 }}
+                          >
+                            {insight.title}
+                          </Typography>
+                          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                            {insight.message}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    );
+                  })}
               </Box>
             </DashboardCard>
           </motion.div>
@@ -484,53 +580,105 @@ const Dashboard: React.FC<any> = () => {
               }
             >
               <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-                {mockTasks.slice(0, 3).map((task) => (
-                  <Box
-                    key={task.id}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      p: 1.5,
-                      border: `1px solid ${theme.palette.divider}`,
-                      borderRadius: "12px",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "8px",
-                        bgcolor: "action.hover",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {task.type === "treatment" ? (
-                        <LocalFlorist fontSize="small" color="secondary" />
-                      ) : (
-                        <TrendingUp fontSize="small" color="primary" />
+                {overviewLoading && (
+                  <>
+                    <Skeleton variant="rounded" height={64} />
+                    <Skeleton variant="rounded" height={64} />
+                    <Skeleton variant="rounded" height={64} />
+                  </>
+                )}
+
+                {!overviewLoading && overviewError && (
+                  <Alert severity="warning">
+                    Could not load your tasks right now.
+                  </Alert>
+                )}
+
+                {!overviewLoading &&
+                  !overviewError &&
+                  overview?.next_tasks.length === 0 && (
+                    <Box>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 1.5 }}
+                      >
+                        {overview.plans_count === 0
+                          ? "You have no plans yet. Pick a crop and a planting date and the planner will schedule your season."
+                          : "All caught up. Nothing is waiting on you."}
+                      </Typography>
+                      {overview.plans_count === 0 && (
+                        <Button
+                          component={RouterLink}
+                          to="/farm-planner"
+                          variant="outlined"
+                          size="small"
+                        >
+                          Create a plan
+                        </Button>
                       )}
                     </Box>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        {task.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {task.date}
-                      </Typography>
-                    </Box>
-                    <Chip
-                      size="small"
-                      label={task.status}
-                      color={
-                        task.status === "in-progress" ? "primary" : "default"
-                      }
-                      sx={{ textTransform: "capitalize" }}
-                    />
-                  </Box>
-                ))}
+                  )}
+
+                {!overviewLoading &&
+                  overview?.next_tasks.map((task) => {
+                    const chip = taskChip(task.status);
+                    return (
+                      <Box
+                        key={`${task.plan_id}-${task.id}`}
+                        component={RouterLink}
+                        to="/farm-planner"
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                          p: 1.5,
+                          border: `1px solid ${theme.palette.divider}`,
+                          borderRadius: "12px",
+                          textDecoration: "none",
+                          color: "inherit",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: "8px",
+                            bgcolor: "action.hover",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {task.type === "fertilizer" ||
+                          task.type === "amendment" ? (
+                            <LocalFlorist fontSize="small" color="secondary" />
+                          ) : (
+                            <TrendingUp fontSize="small" color="primary" />
+                          )}
+                        </Box>
+                        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{ fontWeight: 600 }}
+                          >
+                            {task.title}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {formatLabel(task.crop)}
+                            {task.plot_name
+                              ? ` · ${task.plot_name}`
+                              : ""} · {friendlyDate(task.date)}
+                          </Typography>
+                        </Box>
+                        <Chip
+                          size="small"
+                          label={chip.label}
+                          color={chip.color}
+                        />
+                      </Box>
+                    );
+                  })}
               </Box>
             </DashboardCard>
           </motion.div>
@@ -550,58 +698,89 @@ const Dashboard: React.FC<any> = () => {
           >
             <DashboardCard title="Recent Activity">
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                {recentActivity.map((activity, index) => (
-                  <Box
-                    key={activity.id}
-                    sx={{ display: "flex", gap: 2, position: "relative" }}
-                  >
-                    {index !== recentActivity.length - 1 && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          left: 19,
-                          top: 40,
-                          bottom: -20,
-                          width: 2,
-                          bgcolor: "divider",
-                        }}
-                      />
-                    )}
-                    <Avatar
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        bgcolor:
-                          activity.type === "alert"
-                            ? "error.main"
-                            : activity.type === "success"
-                              ? "primary.main"
-                              : "info.main",
-                      }}
+                {overviewLoading && (
+                  <>
+                    <Skeleton variant="rounded" height={56} />
+                    <Skeleton variant="rounded" height={56} />
+                    <Skeleton variant="rounded" height={56} />
+                  </>
+                )}
+
+                {!overviewLoading && overviewError && (
+                  <Alert severity="warning">
+                    Could not load recent activity right now.
+                  </Alert>
+                )}
+
+                {!overviewLoading &&
+                  !overviewError &&
+                  overview?.activity.length === 0 && (
+                    <Typography variant="body2" color="text.secondary">
+                      Nothing here yet. Creating a plan or completing a task
+                      will show up in this feed.
+                    </Typography>
+                  )}
+
+                {!overviewLoading &&
+                  overview?.activity.map((activity, index) => (
+                    <Box
+                      key={activity.id}
+                      sx={{ display: "flex", gap: 2, position: "relative" }}
                     >
-                      {activity.type === "alert" ? (
-                        <Warning fontSize="small" />
-                      ) : (
-                        <TrendingUp fontSize="small" />
+                      {index !== overview.activity.length - 1 && (
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            left: 19,
+                            top: 40,
+                            bottom: -20,
+                            width: 2,
+                            bgcolor: "divider",
+                          }}
+                        />
                       )}
-                    </Avatar>
-                    <Box sx={{ pb: 1 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        {activity.title}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mb: 0.5 }}
+                      <Avatar
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          bgcolor:
+                            activity.type === "alert"
+                              ? "error.main"
+                              : activity.type === "success"
+                                ? "primary.main"
+                                : "info.main",
+                        }}
                       >
-                        {activity.description}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {activity.time}
-                      </Typography>
+                        {activity.type === "alert" ? (
+                          <Warning fontSize="small" />
+                        ) : activity.type === "success" ? (
+                          <CheckCircle fontSize="small" />
+                        ) : (
+                          <TrendingUp fontSize="small" />
+                        )}
+                      </Avatar>
+                      <Box sx={{ pb: 1 }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{ fontWeight: 600 }}
+                        >
+                          {activity.title}
+                        </Typography>
+                        {activity.description && (
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ mb: 0.5 }}
+                          >
+                            {activity.description}
+                          </Typography>
+                        )}
+                        <Typography variant="caption" color="text.secondary">
+                          {timeAgo(activity.time)}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  ))}
               </Box>
             </DashboardCard>
           </motion.div>
